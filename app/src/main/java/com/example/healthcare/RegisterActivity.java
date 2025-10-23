@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.healthcare.DAO.SQLite.Database;
+
 public class RegisterActivity extends AppCompatActivity {
 
     EditText edUsername, edEmail, edPassword, edConfirmPassword;

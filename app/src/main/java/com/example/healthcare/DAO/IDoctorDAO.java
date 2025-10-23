@@ -4,11 +4,8 @@ import com.example.healthcare.Model.Doctor;
 
 import java.util.List;
 
-public interface IDoctorDAO extends IGenericDAO {
+public interface IDoctorDAO extends IGenericDAO<Doctor> {
 
-    boolean save(Doctor doctor);
-    void update(Doctor doctor);
-    Doctor getDoctorById(int id);
-    List<Doctor> getAllDoctors();
+    List<Doctor> getDoctorsByMedicalSpecialty(String specialty);
     List<Doctor> getDoctorsByName(String name);
 }

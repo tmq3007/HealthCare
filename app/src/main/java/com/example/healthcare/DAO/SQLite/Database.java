@@ -1,4 +1,4 @@
-package com.example.healthcare;
+package com.example.healthcare.DAO.SQLite;
 
 import android.content.ContentValues;
 import android.content.Context;
