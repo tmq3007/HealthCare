@@ -29,7 +29,7 @@ public class FindDoctorActivity extends AppCompatActivity {
 
 
         CardView familyphysician = findViewById(R.id.cardFDFamilyPhysician);
-        back.setOnClickListener(new View.OnClickListener() {
+        familyphysician.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(FindDoctorActivity.this, DoctorDetailsActivity.class);
@@ -39,7 +39,7 @@ public class FindDoctorActivity extends AppCompatActivity {
         });
 
         CardView dietician = findViewById(R.id.cardFDDietician);
-        back.setOnClickListener(new View.OnClickListener() {
+        dietician.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(FindDoctorActivity.this, DoctorDetailsActivity.class);
@@ -49,7 +49,7 @@ public class FindDoctorActivity extends AppCompatActivity {
         });
 
         CardView dentist = findViewById(R.id.cardFDDentist);
-        back.setOnClickListener(new View.OnClickListener() {
+        dentist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(FindDoctorActivity.this, DoctorDetailsActivity.class);
@@ -59,7 +59,7 @@ public class FindDoctorActivity extends AppCompatActivity {
         });
 
         CardView surgeon = findViewById(R.id.cardFDSurgeon);
-        back.setOnClickListener(new View.OnClickListener() {
+        surgeon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(FindDoctorActivity.this, DoctorDetailsActivity.class);
@@ -69,7 +69,7 @@ public class FindDoctorActivity extends AppCompatActivity {
         });
 
         CardView cardiologists = findViewById(R.id.cardFDCardiologists);
-        back.setOnClickListener(new View.OnClickListener() {
+        cardiologists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(FindDoctorActivity.this, DoctorDetailsActivity.class);
