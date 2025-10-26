@@ -1,4 +1,4 @@
-package com.example.healthcare;
+package com.example.healthcare.Activities.ClientActivities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -19,8 +19,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.healthcare.DAO.SQLite.BookingDAOImpl;
 import com.example.healthcare.DAO.SQLite.UserDAOImpl;
 import com.example.healthcare.Model.Booking;
-import com.example.healthcare.Model.Doctor;
 import com.example.healthcare.Model.User;
+import com.example.healthcare.R;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -77,7 +77,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
 
         // Patient info inputs
         UserDAOImpl userDAO = UserDAOImpl.getInstance();
-        User user = userDAO.getCurentUser();
+        User user = userDAO.getCurrentUser(this);
         etFullName = findViewById(R.id.editTextAppFullname);
         etFullName.setText(user.getFullname());
         etAddress = findViewById(R.id.editTextAppAddress);
@@ -238,7 +238,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
         // Check if time slot is available
         BookingDAOImpl bookingDAO = BookingDAOImpl.getInstance();
         UserDAOImpl userDAO = UserDAOImpl.getInstance();
-        User user = userDAO.getCurentUser();
+        User user = userDAO.getCurrentUser(this);
         int userId = user.getId();
 
         if (!bookingDAO.isTimeSlotAvailable(doctorId, selectedDate, selectedTime)) {
@@ -291,11 +291,14 @@ public class BookAppointmentActivity extends AppCompatActivity {
                         "⏰ Please arrive 15 minutes before your appointment.")
                 .setPositiveButton("OK", (dialog, which) -> {
                     // Clear form and go back
+                    Intent intent = new Intent(BookAppointmentActivity.this, HomeActivity.class);
+                    startActivity(intent);
                     clearForm();
                     finish();
                 })
                 .setNegativeButton("View Bookings", (dialog, which) -> {
-                    // TODO: Navigate to bookings list activity
+                    Intent intent = new Intent(BookAppointmentActivity.this, MyBookingActivity.class);
+                    startActivity(intent);
                     clearForm();
                     finish();
                 })

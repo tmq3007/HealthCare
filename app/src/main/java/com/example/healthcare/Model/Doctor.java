@@ -62,6 +62,7 @@ public class Doctor {
     @Override
     public String toString() {
         return "Doctor{" +
+                "Id=" + id +
                 "Name='" + doctorName + '\'' +
                 ", Address='" + hospitalAddress + '\'' +
                 ", Exp=" + yearsOfExperience + " yrs" +

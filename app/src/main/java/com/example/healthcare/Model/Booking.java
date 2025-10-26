@@ -14,6 +14,9 @@ public class Booking {
     private String bookingDate; // When the booking was made
     private String status; // "pending", "confirmed", "completed", "cancelled"
 
+    public Booking() {
+    }
+
     public Booking(int doctorId, String patientName, String patientAddress, String patientPhone, int userId, int fee, String appointmentDate, String appointmentTime, String bookingDate, String status, int id) {
         this.doctorId = doctorId;
         this.patientName = patientName;

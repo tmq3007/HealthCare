@@ -12,34 +12,35 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthCare">
         <activity
-            android:name=".BookAppointmentActivity"
+            android:name=".Activities.ClientActivities.MyBookingActivity"
             android:exported="false" />
         <activity
-            android:name=".DoctorDetailsActivity"
+            android:name=".Activities.ClientActivities.BookAppointmentActivity"
             android:exported="false" />
         <activity
-            android:name=".FindDoctorActivity"
+            android:name=".Activities.ClientActivities.DoctorDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".Activities.ClientActivities.FindDoctorActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".Activities.ClientActivities.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Activities.ClientActivities.RegisterActivity"
             android:exported="false" />
-
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.ClientActivities.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
     </application>
 
 </manifest>

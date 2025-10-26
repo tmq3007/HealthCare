@@ -1,4 +1,4 @@
-package com.example.healthcare.Adaptor;
+package com.example.healthcare.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.healthcare.BookAppointmentActivity;
+import com.example.healthcare.Activities.ClientActivities.BookAppointmentActivity;
 import com.example.healthcare.Model.Doctor;
 import com.example.healthcare.R;
 
@@ -72,7 +72,7 @@ public class DoctorAdapter extends ArrayAdapter<Doctor> {
         // Book button click listener
         holder.bookButton.setOnClickListener(v -> {
             Intent intent = new Intent(context, BookAppointmentActivity.class);
-            intent.putExtra("doctoId", doctor.getId());
+            intent.putExtra("doctorId", doctor.getId());
             intent.putExtra("doctorName", doctor.getDoctorName());
             intent.putExtra("hospitalAddress", doctor.getHospitalAddress());
             intent.putExtra("phoneNumber", doctor.getPhoneNumber());

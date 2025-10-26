@@ -1,4 +1,4 @@
-package com.example.healthcare;
+package com.example.healthcare.Activities.ClientActivities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +11,10 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.healthcare.Adaptor.DoctorAdapter;
+import com.example.healthcare.Adapters.DoctorAdapter;
 import com.example.healthcare.DAO.SQLite.DoctorDAOImpl;
 import com.example.healthcare.Model.Doctor;
+import com.example.healthcare.R;
 
 import java.util.List;
 
