@@ -15,16 +15,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.healthcare.DAO.SQLite.Database;
+import com.example.healthcare.DAO.SQLite.UserDAOImpl;
+import com.example.healthcare.Model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText edUsername, edPassword;
+    private EditText edUsername, edPassword;
+    private TextView tvRegister;
+    private Button btnLogin;
 
-    TextView tv;
-
-    Button btn;
-
+    private final UserDAOImpl userDAO = UserDAOImpl.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,48 +34,63 @@ public class LoginActivity extends AppCompatActivity {
 
         edUsername = findViewById(R.id.editTextLoginUsername);
         edPassword = findViewById(R.id.editTextLoginPassword);
-        tv = findViewById(R.id.textViewRegister);
-        btn = findViewById(R.id.button);
+        tvRegister = findViewById(R.id.textViewRegister);
+        btnLogin = findViewById(R.id.button);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = edUsername.getText().toString();
-                String password = edPassword.getText().toString();
-                Database db = new Database(getApplicationContext(),"healthcare",null,1);
-
-                if(username.isEmpty() || password.isEmpty()){
-                    Toast.makeText(getApplicationContext(),"Please enter your username and password",Toast.LENGTH_SHORT).show();
-                }else{
-                    if (db.login(username,password)==1){
-                        Toast.makeText(getApplicationContext(),"Login successfully",Toast.LENGTH_SHORT).show();
-
-                        SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs",MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("username",username);
-                        //save data with key-value
-                        editor.apply();
-
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    }else {
-                        Toast.makeText(getApplicationContext(),"Login failed, invalid username or password",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            }
-        });
-
+        btnLogin.setOnClickListener(v -> handleLogin());
+        tvRegister.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Auto-login if user already logged in previously
+        SharedPreferences prefs = getSharedPreferences("shared_prefs", MODE_PRIVATE);
+        String username = prefs.getString("username", null);
+
+        if (username != null) {
+            // Optional: verify the username still exists in DB
+            User user = userDAO.getUserByUsername(username);
+            if (user != null) {
+                Toast.makeText(this, "Welcome back, " + username + "!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                finish(); // Prevent returning to login
+            } else {
+                // If user no longer exists, clear stored data
+                prefs.edit().clear().apply();
+            }
+        }
+    }
+
+    private void handleLogin() {
+        String username = edUsername.getText().toString().trim();
+        String password = edPassword.getText().toString().trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please enter your username and password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        User user = userDAO.login(username, password);
+        if (user != null) {
+            // Save session
+            SharedPreferences prefs = getSharedPreferences("shared_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("username", user.getUsername());
+            editor.putInt("userId", user.getId());
+            editor.apply();
+
+            Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            finish();
+        } else {
+            Toast.makeText(this, "Login failed: invalid username or password", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -14,15 +14,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.healthcare.DAO.SQLite.Database;
+import com.example.healthcare.DAO.SQLite.UserDAOImpl;
+import com.example.healthcare.Model.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText edUsername, edEmail, edPassword, edConfirmPassword;
+    private EditText edUsername, edEmail, edPassword, edConfirmPassword;
+    private TextView tvHaveAcc;
+    private Button btnRegister;
 
-    TextView tv;
-
-    Button btn;
+    private final UserDAOImpl userDAO = UserDAOImpl.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,46 +35,12 @@ public class RegisterActivity extends AppCompatActivity {
         edEmail = findViewById(R.id.editTextRegEmail);
         edPassword = findViewById(R.id.editTextRegPassword);
         edConfirmPassword = findViewById(R.id.editTextRegConfirmPassword);
-        tv = findViewById(R.id.textViewHaveAcc);
-        btn = findViewById(R.id.button);
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
-            }
-        });
+        tvHaveAcc = findViewById(R.id.textViewHaveAcc);
+        btnRegister = findViewById(R.id.button);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = edUsername.getText().toString();
-                String email = edEmail.getText().toString();
-                String password = edPassword.getText().toString();
-                String confirmPassword = edConfirmPassword.getText().toString();
+        tvHaveAcc.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
+        btnRegister.setOnClickListener(v -> handleRegister());
 
-                Database db = new Database(getApplicationContext(),"healthcare",null,1);
-
-                if(username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty()){
-                    Toast.makeText(getApplicationContext(),"Please enter your username and password",Toast.LENGTH_SHORT).show();
-                }else{
-                    if(password.compareTo(confirmPassword)==0){
-                        if (isValid(password)){
-                            //in db
-                            db.register(username,email,password);
-
-                            Toast.makeText(getApplicationContext(),"Record Inserted",Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                        }else {
-                            Toast.makeText(getApplicationContext(),"Password must contain at least 8 characters, having " +
-                                    "letters, numbers and special characters",Toast.LENGTH_SHORT).show();
-
-                        }
-                    }else {
-                        Toast.makeText(getApplicationContext(),"Password and confirm password does not match",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -81,35 +48,53 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    public static boolean isValid(String passwordhere) {
-        int f1 = 0, f2 = 0, f3 = 0;
+    private void handleRegister() {
+        String username = edUsername.getText().toString().trim();
+        String email = edEmail.getText().toString().trim();
+        String password = edPassword.getText().toString().trim();
+        String confirmPassword = edConfirmPassword.getText().toString().trim();
 
-        if (passwordhere.length() < 8) {
-            return false;
-        } else {
-            for (int p = 0; p < passwordhere.length(); p++) {
-                if (Character.isLetter(passwordhere.charAt(p))) {
-                    f1 = 1;
-                }
-            }
-
-            for (int r = 0; r < passwordhere.length(); r++) {
-                if (Character.isDigit(passwordhere.charAt(r))) {
-                    f2 = 1;
-                }
-            }
-
-            for (int s = 0; s < passwordhere.length(); s++) {
-                char c = passwordhere.charAt(s);
-                if ((c >= 33 && c <= 46) || c == 64) {
-                    f3 = 1;
-                }
-            }
-
-            if (f1 == 1 && f2 == 1 && f3 == 1)
-                return true;
-            return false;
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Password and confirm password do not match", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!isValid(password)) {
+            Toast.makeText(this,
+                    "Password must be at least 8 characters, including letters, numbers, and special characters",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Check duplicate username
+        if (userDAO.getUserByUsername(username) != null) {
+            Toast.makeText(this, "Username already exists", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Register user
+        userDAO.register(username, email, password);
+        Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show();
+
+        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        finish();
     }
 
+    private boolean isValid(String password) {
+        boolean hasLetter = false, hasDigit = false, hasSpecial = false;
+
+        if (password.length() < 8) return false;
+
+        for (char c : password.toCharArray()) {
+            if (Character.isLetter(c)) hasLetter = true;
+            else if (Character.isDigit(c)) hasDigit = true;
+            else if ((c >= 33 && c <= 46) || c == 64) hasSpecial = true;
+        }
+        return hasLetter && hasDigit && hasSpecial;
+    }
 }

@@ -29,10 +29,10 @@ public class HomeActivity extends AppCompatActivity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
-                editor.apply();
+                SharedPreferences prefs = getSharedPreferences("shared_prefs", MODE_PRIVATE);
+                prefs.edit().clear().apply();
                 startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+                finish();
             }
         });
 
